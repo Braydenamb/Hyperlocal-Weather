@@ -1,0 +1,126 @@
+// Prisma schema for HyperWeather
+// PostgreSQL provider with full model definitions
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model WeatherCache {
+  id          String   @id @default(cuid())
+  latitude    Float
+  longitude   Float
+  dataType    String   @map("data_type") // "current" | "hourly" | "daily" | "air_quality"
+  data        Json
+  fetchedAt   DateTime @default(now()) @map("fetched_at")
+  expiresAt   DateTime @map("expires_at")
+  timezone    String   @default("auto")
+
+  @@unique([latitude, longitude, dataType])
+  @@index([latitude, longitude])
+  @@index([expiresAt])
+  @@map("weather_cache")
+}
+
+model CommunityReport {
+  id          String   @id @default(cuid())
+  latitude    Float
+  longitude   Float
+  reportType  String   @map("report_type") // "rain" | "snow" | "hail" | "fog" | "wind" | "flooding" | "other"
+  severity    Int      @default(1) // 1-5 scale
+  description String?
+  imageUrl    String?  @map("image_url")
+  userId      String?  @map("user_id")
+  verified    Boolean  @default(false)
+  upvotes     Int      @default(0)
+  downvotes   Int      @default(0)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  expiresAt   DateTime @map("expires_at")
+
+  @@index([latitude, longitude])
+  @@index([reportType])
+  @@index([createdAt])
+  @@map("community_reports")
+}
+
+model SavedLocation {
+  id          String   @id @default(cuid())
+  userId      String   @map("user_id")
+  name        String
+  latitude    Float
+  longitude   Float
+  country     String?
+  countryCode String?  @map("country_code")
+  admin1      String?  // State/Province
+  timezone    String?
+  isPrimary   Boolean  @default(false) @map("is_primary")
+  sortOrder   Int      @default(0) @map("sort_order")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@unique([userId, latitude, longitude])
+  @@index([userId])
+  @@map("saved_locations")
+}
+
+model RadarCell {
+  id          String   @id @default(cuid())
+  latitude    Float
+  longitude   Float
+  resolution  Float    @default(0.01) // Grid cell size in degrees
+  intensity   Float    // Precipitation intensity in mm/h
+  radarType   String   @map("radar_type") // "rain" | "snow" | "mixed"
+  direction   Float?   // Movement direction in degrees
+  speed       Float?   // Movement speed in km/h
+  timestamp   DateTime
+  validUntil  DateTime @map("valid_until")
+
+  @@index([latitude, longitude])
+  @@index([timestamp])
+  @@index([validUntil])
+  @@map("radar_cells")
+}
+
+model ForecastSnapshot {
+  id          String   @id @default(cuid())
+  latitude    Float
+  longitude   Float
+  forecastFor DateTime @map("forecast_for") // The date/time this forecast is predicting
+  issuedAt    DateTime @map("issued_at")    // When this forecast was generated
+  provider    String   @default("open-meteo")
+  tempHigh    Float?   @map("temp_high")
+  tempLow     Float?   @map("temp_low")
+  precipitation Float? @default(0)
+  weatherCode Int?     @map("weather_code")
+  confidence  Float?   @default(1.0) // 0-1 confidence score
+  data        Json     // Full forecast data blob
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@unique([latitude, longitude, forecastFor, issuedAt, provider])
+  @@index([latitude, longitude])
+  @@index([forecastFor])
+  @@index([issuedAt])
+  @@map("forecast_snapshots")
+}
+
+model UserSettings {
+  id                String   @id @default(cuid())
+  userId            String   @unique @map("user_id")
+  temperatureUnit   String   @default("celsius") @map("temperature_unit") // "celsius" | "fahrenheit"
+  windSpeedUnit     String   @default("kmh") @map("wind_speed_unit") // "kmh" | "mph" | "ms" | "knots"
+  precipitationUnit String   @default("mm") @map("precipitation_unit") // "mm" | "inch"
+  timeFormat        String   @default("24h") @map("time_format") // "12h" | "24h"
+  theme             String   @default("system") // "light" | "dark" | "system"
+  alertsEnabled     Boolean  @default(true) @map("alerts_enabled")
+  alertRadius       Int      @default(25) @map("alert_radius") // in km
+  language          String   @default("en")
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  @@map("user_settings")
+}
