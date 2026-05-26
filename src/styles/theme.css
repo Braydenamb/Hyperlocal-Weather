@@ -1,60 +1,81 @@
-/* ───────────── HyperWeather Semantic CSS Variables ───────────── */
+/* ───────────── HyperWeather Modern Theme System ───────────── */
+
 :root {
-  --background: #0B1020;
-  --foreground: #E8ECF4;
-  --card: rgba(255, 255, 255, 0.06);
-  --card-hover: rgba(255, 255, 255, 0.10);
-  --border: rgba(255, 255, 255, 0.08);
-  --text-primary: #E8ECF4;
-  --text-secondary: rgba(255, 255, 255, 0.5);
-  --text-muted: rgba(255, 255, 255, 0.3);
+  /* Premium Dark Theme (Default) */
+  --bg: #040711;
+  --bg-gradient: linear-gradient(135deg, #040711 0%, #080E24 40%, #0B1536 75%, #040711 100%);
+  --panel: rgba(255, 255, 255, 0.02);
+  --panel-hover: rgba(255, 255, 255, 0.05);
+  --panel-active: rgba(255, 255, 255, 0.08);
+  --border: rgba(255, 255, 255, 0.06);
+  --border-focus: rgba(6, 182, 212, 0.5);
   
-  --accent: #06B6D4;
-  --accent-glow: rgba(6, 182, 212, 0.35);
-  --accent-electric: #3B82F6;
-  --accent-violet: #8B5CF6;
+  --text: #F9FAFB;
+  --text-secondary: rgba(249, 250, 251, 0.6);
+  --text-muted: rgba(249, 250, 251, 0.35);
   
-  /* Semantic weather colors */
-  --chart-rain: #3b82f6;
-  --chart-storms: #8b5cf6;
-  --chart-humidity: #14b8a6;
+  /* Brand & Accents */
+  --primary: #06B6D4;
+  --primary-glow: rgba(6, 182, 212, 0.25);
+  --electric: #3B82F6;
+  --electric-glow: rgba(59, 130, 246, 0.25);
+  --violet: #8B5CF6;
   
-  /* AQI Scales */
-  --chart-aqi-good: #22c55e;
-  --chart-aqi-moderate: #eab308;
-  --chart-aqi-poor: #ef4444;
+  /* Semantic Weather Elements */
+  --rain: #3B82F6;
+  --storm: #8B5CF6;
+  --humidity: #10B981;
   
-  /* UV Scales */
-  --chart-uv-low: #f59e0b;
-  --chart-uv-high: #ea580c;
+  /* AQI & UV Scales */
+  --aqi-good: #10B981;
+  --aqi-moderate: #F59E0B;
+  --aqi-poor: #EF4444;
+  
+  --uv-low: #10B981;
+  --uv-mid: #F59E0B;
+  --uv-high: #EF4444;
+
+  --shadow-sm: 0 2px 8px -2px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 12px 24px -6px rgba(0, 0, 0, 0.7);
+  --shadow-lg: 0 20px 40px -10px rgba(0, 0, 0, 0.8);
 }
 
 .light {
-  --background: #F7F9FC;
-  --foreground: #1E293B;
-  --card: rgba(255, 255, 255, 0.85);
-  --card-hover: rgba(255, 255, 255, 0.95);
-  --border: rgba(0, 0, 0, 0.08);
-  --text-primary: #1E293B;
-  --text-secondary: rgba(0, 0, 0, 0.55);
-  --text-muted: rgba(0, 0, 0, 0.35);
+  /* Premium Light Theme */
+  --bg: #F8FAFC;
+  --bg-gradient: linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 50%, #E2E8F0 100%);
+  --panel: rgba(255, 255, 255, 0.65);
+  --panel-hover: rgba(255, 255, 255, 0.85);
+  --panel-active: rgba(255, 255, 255, 0.95);
+  --border: rgba(15, 23, 42, 0.06);
+  --border-focus: rgba(2, 132, 199, 0.5);
   
-  --accent: #0284C7;
-  --accent-glow: rgba(2, 132, 199, 0.2);
-  --accent-electric: #2563EB;
-  --accent-violet: #7C3AED;
+  --text: #0F172A;
+  --text-secondary: rgba(15, 23, 42, 0.6);
+  --text-muted: rgba(15, 23, 42, 0.35);
   
-  /* Semantic weather colors */
-  --chart-rain: #2563EB;
-  --chart-storms: #7C3AED;
-  --chart-humidity: #0D9488;
+  /* Brand & Accents */
+  --primary: #0284C7;
+  --primary-glow: rgba(2, 132, 199, 0.15);
+  --electric: #2563EB;
+  --electric-glow: rgba(37, 99, 235, 0.15);
+  --violet: #7C3AED;
   
-  /* AQI Scales */
-  --chart-aqi-good: #16A34A;
-  --chart-aqi-moderate: #CA8A04;
-  --chart-aqi-poor: #DC2626;
+  /* Semantic Weather Elements */
+  --rain: #2563EB;
+  --storm: #7C3AED;
+  --humidity: #0D9488;
   
-  /* UV Scales */
-  --chart-uv-low: #D97706;
-  --chart-uv-high: #C2410C;
+  /* AQI & UV Scales */
+  --aqi-good: #16A34A;
+  --aqi-moderate: #CA8A04;
+  --aqi-poor: #DC2626;
+  
+  --uv-low: #16A34A;
+  --uv-mid: #CA8A04;
+  --uv-high: #DC2626;
+
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 16px -2px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 12px 32px -4px rgba(0, 0, 0, 0.12);
 }

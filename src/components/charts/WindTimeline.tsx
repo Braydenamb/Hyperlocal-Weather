@@ -7,10 +7,8 @@ import {
   Line,
   XAxis,
   YAxis,
-  CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  ReferenceDot,
 } from 'recharts';
 import { format, parseISO } from 'date-fns';
 import { useWeatherStore } from '@/stores/weatherStore';
@@ -31,17 +29,18 @@ function windDirectionLabel(deg: number): string {
 function CustomTooltip({ active, payload }: { active?: boolean; payload?: Array<{ value: number; payload: WindDataPoint }> }) {
   if (!active || !payload?.length) return null;
   const data = payload[0].payload;
+  
   return (
-    <div 
-      className="rounded-xl px-3 py-2 shadow-xl backdrop-blur-xl border"
-      style={{ 
-        backgroundColor: 'var(--chart-tooltip-bg)',
-        borderColor: 'var(--chart-tooltip-border)',
-        color: 'var(--chart-tooltip-text)'
-      }}
-    >
-      <p className="text-sm font-bold" style={{ color: 'var(--chart-wind-line)' }}>{data.speed.toFixed(1)} km/h</p>
-      <p className="text-xs opacity-70">Direction: {data.dirLabel} ({data.direction}°)</p>
+    <div className="glass-panel px-3.5 py-2.5 shadow-xl bg-slate-950/80 backdrop-blur-xl border border-white/5 text-left flex flex-col gap-0.5">
+      <div className="text-[10px] font-black uppercase tracking-widest text-white/40">
+        Wind Velocity
+      </div>
+      <div className="text-lg font-black text-teal-400 mt-0.5">
+        {data.speed.toFixed(1)} km/h
+      </div>
+      <div className="text-[11px] font-medium text-white/50">
+        Direction: {data.dirLabel} ({data.direction}°)
+      </div>
     </div>
   );
 }
@@ -54,49 +53,40 @@ function CustomDot(props: { cx?: number; cy?: number; payload?: WindDataPoint; i
   const rotation = payload.direction;
   return (
     <g transform={`translate(${cx}, ${cy})`}>
-      <circle r="3" fill="var(--chart-wind-line)" stroke="var(--color-background)" strokeWidth="1.5" />
+      <circle r="3" fill="var(--humidity)" stroke="var(--bg)" strokeWidth="1.5" />
       <g transform={`rotate(${rotation})`}>
-        <line x1="0" y1="-6" x2="0" y2="-12" stroke="var(--chart-wind-line)" strokeWidth="1.5" />
-        <polygon points="-3,-10 0,-14 3,-10" fill="var(--chart-wind-line)" />
+        <line x1="0" y1="-6" x2="0" y2="-11" stroke="var(--humidity)" strokeWidth="1.5" />
+        <polygon points="-2.5,-9 0,-13 2.5,-9" fill="var(--humidity)" />
       </g>
     </g>
   );
 }
 
 export default function WindTimeline({ className = '' }: { className?: string }) {
-  const { hourlyForecast, currentWeather } = useWeatherStore();
+  const { hourlyForecast } = useWeatherStore();
 
-  const { data, gustPoint } = useMemo(() => {
-    if (!hourlyForecast) return { data: [], gustPoint: null };
+  const data = useMemo<WindDataPoint[]>(() => {
+    if (!hourlyForecast) return [];
     const now = new Date();
     const currentHour = now.getHours();
 
-    const chartData: WindDataPoint[] = hourlyForecast.time
+    return hourlyForecast.time
       .slice(currentHour, currentHour + 24)
       .map((t, i) => ({
         time: t,
-        hour: format(parseISO(t), 'ha'),
-        speed: hourlyForecast.windSpeed[currentHour + i],
-        direction: hourlyForecast.windDirection[currentHour + i],
-        dirLabel: windDirectionLabel(hourlyForecast.windDirection[currentHour + i]),
+        hour: format(parseISO(t), 'h a'),
+        speed: hourlyForecast.windSpeed[currentHour + i] ?? 0,
+        direction: hourlyForecast.windDirection[currentHour + i] ?? 0,
+        dirLabel: windDirectionLabel(hourlyForecast.windDirection[currentHour + i] ?? 0),
       }));
-
-    let maxGust: { hour: string; speed: number } | null = null;
-    if (currentWeather) {
-      const maxIdx = chartData.reduce(
-        (maxI, p, i, arr) => (p.speed > arr[maxI].speed ? i : maxI),
-        0
-      );
-      maxGust = { hour: chartData[maxIdx].hour, speed: chartData[maxIdx].speed };
-    }
-
-    return { data: chartData, gustPoint: maxGust };
-  }, [hourlyForecast, currentWeather]);
+  }, [hourlyForecast]);
 
   if (!data.length) {
     return (
-      <div className={`flex w-full h-full min-h-[150px] items-center justify-center ${className}`}>
-        <p className="text-sm opacity-50">No wind data available</p>
+      <div className={`flex w-full h-full min-h-[180px] items-center justify-center ${className}`}>
+        <span className="text-xs font-semibold text-white/30 tracking-wider uppercase">
+          No velocity metrics
+        </span>
       </div>
     );
   }
@@ -105,44 +95,38 @@ export default function WindTimeline({ className = '' }: { className?: string })
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 0.5, delay: 0.2 }}
-      className={`w-full h-full min-h-[150px] ${className}`}
+      transition={{ duration: 0.6 }}
+      className={`w-full h-full min-h-[180px] relative ${className}`}
     >
       <ResponsiveContainer width="100%" height="100%">
-        <LineChart data={data} margin={{ top: 15, right: 10, bottom: 0, left: -15 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="var(--chart-grid)" vertical={false} />
+        <LineChart data={data} margin={{ top: 15, right: 10, bottom: 0, left: -25 }}>
           <XAxis
             dataKey="hour"
-            tick={{ fill: 'var(--chart-axis-text)', fontSize: 11 }}
-            axisLine={{ stroke: 'var(--chart-axis-line)' }}
+            tick={{ fill: 'var(--text-muted)', fontSize: 10, fontWeight: 700 }}
+            axisLine={false}
             tickLine={false}
             interval={3}
           />
           <YAxis
-            tick={{ fill: 'var(--chart-axis-text)', fontSize: 11 }}
+            tick={{ fill: 'var(--text-muted)', fontSize: 10, fontWeight: 700 }}
             axisLine={false}
             tickLine={false}
-            tickFormatter={(v: number) => `${v}`}
+            tickFormatter={(v: number) => `${Math.round(v)}`}
           />
-          <Tooltip content={<CustomTooltip />} cursor={{ stroke: 'var(--chart-axis-line)' }} />
+          
+          <Tooltip 
+            content={<CustomTooltip />} 
+            cursor={{ stroke: 'var(--border)', strokeWidth: 1.5, strokeDasharray: '4 4' }} 
+          />
+          
           <Line
             type="monotone"
             dataKey="speed"
-            stroke="var(--chart-wind-line)"
-            strokeWidth={2.5}
+            stroke="var(--humidity)"
+            strokeWidth={2}
             dot={<CustomDot />}
-            activeDot={{ r: 5, fill: 'var(--chart-wind-line)', stroke: 'var(--color-background)', strokeWidth: 2 }}
+            activeDot={{ r: 4, fill: 'var(--humidity)', stroke: 'var(--bg)', strokeWidth: 2 }}
           />
-          {gustPoint && (
-            <ReferenceDot
-              x={gustPoint.hour}
-              y={gustPoint.speed}
-              r={6}
-              fill="var(--color-warning)"
-              stroke="var(--color-background)"
-              strokeWidth={2}
-            />
-          )}
         </LineChart>
       </ResponsiveContainer>
     </motion.div>

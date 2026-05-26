@@ -1,8 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import Sidebar from './Sidebar';
-import Header from './Header';
+import FloatingDock from './FloatingDock';
+import FloatingHeader from './FloatingHeader';
 import RightPanel from './RightPanel';
 import MobileNav from './MobileNav';
 
@@ -11,58 +10,36 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  const sidebarWidth = sidebarCollapsed ? 64 : 240;
-
   return (
-    <div className="flex h-screen overflow-hidden gradient-bg">
-      {/* Sidebar */}
-      <Sidebar
-        collapsed={sidebarCollapsed}
-        onToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
-      />
+    <div className="relative min-h-screen overflow-hidden flex">
+      {/* Slow-moving elegant ambient gradient background */}
+      <div className="ambient-bg" />
 
-      {/* Mobile sidebar overlay */}
-      {mobileMenuOpen && (
-        <>
-          <div
-            className="md:hidden fixed inset-0 bg-black/60 z-40"
-            onClick={() => setMobileMenuOpen(false)}
-          />
-          <div className="md:hidden fixed inset-y-0 left-0 z-50 w-64 glass-sidebar">
-            <Sidebar
-              collapsed={false}
-              onToggle={() => setMobileMenuOpen(false)}
-            />
-          </div>
-        </>
-      )}
+      {/* Floating Left Navigation dock */}
+      <FloatingDock />
 
-      {/* Main content area */}
-      <div
-        className="flex-1 flex flex-col min-w-0 h-screen transition-[padding-left] duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] pl-0 md:pl-[var(--sidebar-width)]"
-        style={{
-          ['--sidebar-width' as any]: sidebarCollapsed ? '64px' : '240px',
-        }}
-      >
-        {/* Header */}
-        <Header onMobileMenuToggle={() => setMobileMenuOpen(!mobileMenuOpen)} />
+      {/* Main Workspace Column */}
+      <div className="flex-1 flex flex-col min-w-0 md:pl-24 pt-4 pb-20 md:pb-4 transition-all duration-300">
+        
+        {/* Floating Top Header bar */}
+        <FloatingHeader />
 
-        {/* Content + Right Panel */}
-        <div className="flex-1 flex overflow-hidden min-h-0">
-          {/* Main scrollable content */}
-          <main className="flex-1 overflow-y-auto p-4 lg:p-6 pb-28 md:pb-8">
-            {children}
+        {/* Dynamic Workspace Container */}
+        <div className="flex-1 flex overflow-hidden min-h-0 mt-4">
+          
+          {/* Breathing scrollable main workspace content */}
+          <main className="flex-1 overflow-y-auto scroller px-4 md:px-6 pb-12">
+            <div className="max-w-7xl mx-auto w-full">
+              {children}
+            </div>
           </main>
 
-          {/* Right Panel */}
+          {/* Right Info Panel */}
           <RightPanel />
         </div>
       </div>
 
-      {/* Mobile Bottom Nav */}
+      {/* Bottom Dock Nav on Mobile */}
       <MobileNav />
     </div>
   );

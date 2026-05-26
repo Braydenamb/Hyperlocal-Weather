@@ -26,12 +26,13 @@ export default function MapControls({
   ];
 
   return (
-    <div className="absolute bottom-6 left-6 z-20 flex flex-col gap-3">
+    <div className="absolute bottom-6 left-6 right-6 z-20 flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between pointer-events-none">
+      
       {/* Layer Toggles Panel */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="glass-panel p-2.5 rounded-2xl flex items-center gap-1.5 shadow-2xl border border-white/8 bg-[#0B1020]/80 backdrop-blur-xl"
+        className="glass-panel p-2 rounded-2xl flex items-center gap-1 shadow-md border-white/5 pointer-events-auto bg-slate-950/80 backdrop-blur-xl"
       >
         <span className="p-2 text-white/40">
           <Layers className="w-4 h-4" />
@@ -45,10 +46,10 @@ export default function MapControls({
               key={layer.id}
               onClick={() => setActiveLayer(layer.id)}
               className={clsx(
-                'flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold tracking-wide transition-all duration-200 focus-ring',
+                'flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold tracking-wide transition-all duration-200 focus-ring',
                 isActive
                   ? 'bg-cyan/15 border border-cyan/30 text-cyan shadow-[0_0_12px_rgba(6,182,212,0.15)]'
-                  : 'border border-transparent text-white/60 hover:text-white/90 hover:bg-white/5'
+                  : 'border border-transparent text-white/50 hover:text-white/80 hover:bg-white/5'
               )}
             >
               <Icon className="w-3.5 h-3.5" />
@@ -63,18 +64,18 @@ export default function MapControls({
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.05 }}
-        className="glass-panel p-1.5 rounded-2xl flex gap-1 shadow-2xl border border-white/8 bg-[#0B1020]/80 backdrop-blur-xl self-start"
+        className="glass-panel p-1.5 rounded-2xl flex gap-1 shadow-md border-white/5 pointer-events-auto bg-slate-950/80 backdrop-blur-xl"
       >
         <button
           onClick={onZoomIn}
-          className="p-2 rounded-xl text-white/60 hover:text-cyan hover:bg-cyan/10 transition-all duration-150 focus-ring"
+          className="p-2 rounded-xl text-white/50 hover:text-cyan hover:bg-cyan/10 transition-all duration-150 focus-ring"
           title="Zoom In"
         >
           <ZoomIn className="w-4 h-4" />
         </button>
         <button
           onClick={onZoomOut}
-          className="p-2 rounded-xl text-white/60 hover:text-cyan hover:bg-cyan/10 transition-all duration-150 focus-ring"
+          className="p-2 rounded-xl text-white/50 hover:text-cyan hover:bg-cyan/10 transition-all duration-150 focus-ring"
           title="Zoom Out"
         >
           <ZoomOut className="w-4 h-4" />
@@ -82,12 +83,13 @@ export default function MapControls({
         <div className="w-px bg-white/10 my-1 mx-0.5"></div>
         <button
           onClick={onRecenter}
-          className="p-2 rounded-xl text-white/60 hover:text-cyan hover:bg-cyan/10 transition-all duration-150 focus-ring"
+          className="p-2 rounded-xl text-white/50 hover:text-cyan hover:bg-cyan/10 transition-all duration-150 focus-ring"
           title="Recenter Map"
         >
           <Compass className="w-4 h-4" />
         </button>
       </motion.div>
+      
     </div>
   );
 }

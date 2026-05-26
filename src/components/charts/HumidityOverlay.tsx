@@ -8,10 +8,8 @@ import {
   Line,
   XAxis,
   YAxis,
-  CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  Legend,
 } from 'recharts';
 import { format, parseISO } from 'date-fns';
 import { useWeatherStore } from '@/stores/weatherStore';
@@ -25,16 +23,22 @@ interface HumidityDataPoint {
 
 function CustomTooltip({ active, payload }: { active?: boolean; payload?: Array<{ value: number; name: string; color: string }> }) {
   if (!active || !payload?.length) return null;
+  const humidity = payload.find(p => p.name === 'Humidity')?.value;
+  const dewPoint = payload.find(p => p.name === 'Dew Point')?.value;
+
   return (
-    <div className="rounded-xl border border-white/10 bg-[#0B1020]/90 px-3 py-2 shadow-xl backdrop-blur-xl">
-      {payload.map((entry, i) => (
-        <p key={i} className="text-sm" style={{ color: entry.color }}>
-          <span className="font-bold">{entry.value.toFixed(1)}</span>
-          <span className="ml-1 text-xs text-white/50">
-            {entry.name === 'humidity' ? '%' : '°C'}
-          </span>
-        </p>
-      ))}
+    <div className="glass-panel px-3.5 py-2.5 shadow-xl bg-slate-950/80 backdrop-blur-xl border border-white/5 text-left flex flex-col gap-0.5">
+      <div className="text-[10px] font-black uppercase tracking-widest text-white/40">
+        Moisture Profile
+      </div>
+      <div className="text-lg font-black text-emerald-400 mt-0.5">
+        {humidity !== undefined ? `${Math.round(humidity)}% humidity` : '--'}
+      </div>
+      {dewPoint !== undefined && (
+        <div className="text-[11px] font-medium text-white/50">
+          Dew Point: {dewPoint.toFixed(1)}°C
+        </div>
+      )}
     </div>
   );
 }
@@ -49,16 +53,18 @@ export default function HumidityOverlay({ className = '' }: { className?: string
 
     return hourlyForecast.time.slice(currentHour, currentHour + 24).map((t, i) => ({
       time: t,
-      hour: format(parseISO(t), 'ha'),
-      humidity: hourlyForecast.humidity[currentHour + i],
-      dewPoint: hourlyForecast.dewPoint[currentHour + i],
+      hour: format(parseISO(t), 'h a'),
+      humidity: hourlyForecast.humidity[currentHour + i] ?? 0,
+      dewPoint: hourlyForecast.dewPoint[currentHour + i] ?? 0,
     }));
   }, [hourlyForecast]);
 
   if (!data.length) {
     return (
-      <div className={`flex w-full h-full min-h-[150px] items-center justify-center ${className}`}>
-        <p className="text-sm opacity-50">No humidity data available</p>
+      <div className={`flex w-full h-full min-h-[180px] items-center justify-center ${className}`}>
+        <span className="text-xs font-semibold text-white/30 tracking-wider uppercase">
+          No humidity telemetry
+        </span>
       </div>
     );
   }
@@ -67,28 +73,28 @@ export default function HumidityOverlay({ className = '' }: { className?: string
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
-      className={`w-full h-full min-h-[150px] ${className}`}
+      transition={{ duration: 0.6 }}
+      className={`w-full h-full min-h-[180px] relative ${className}`}
     >
       <ResponsiveContainer width="100%" height="100%">
-        <ComposedChart data={data} margin={{ top: 10, right: 10, bottom: 0, left: -15 }}>
+        <ComposedChart data={data} margin={{ top: 12, right: 10, bottom: 0, left: -25 }}>
           <defs>
             <linearGradient id="humidityGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="var(--color-teal)" stopOpacity={0.35} />
-              <stop offset="100%" stopColor="var(--color-teal)" stopOpacity={0} />
+              <stop offset="0%" stopColor="var(--humidity)" stopOpacity={0.15} />
+              <stop offset="100%" stopColor="var(--humidity)" stopOpacity={0.0} />
             </linearGradient>
           </defs>
-          <CartesianGrid strokeDasharray="3 3" stroke="var(--chart-grid)" vertical={false} />
+          
           <XAxis
             dataKey="hour"
-            tick={{ fill: 'var(--chart-axis-text)', fontSize: 11 }}
-            axisLine={{ stroke: 'var(--chart-axis-line)' }}
+            tick={{ fill: 'var(--text-muted)', fontSize: 10, fontWeight: 700 }}
+            axisLine={false}
             tickLine={false}
             interval={3}
           />
           <YAxis
             yAxisId="humidity"
-            tick={{ fill: 'var(--chart-axis-text)', fontSize: 11 }}
+            tick={{ fill: 'var(--text-muted)', fontSize: 10, fontWeight: 700 }}
             axisLine={false}
             tickLine={false}
             domain={[0, 100]}
@@ -97,37 +103,39 @@ export default function HumidityOverlay({ className = '' }: { className?: string
           <YAxis
             yAxisId="dewPoint"
             orientation="right"
-            tick={{ fill: 'var(--chart-axis-text)', fontSize: 11 }}
+            tick={false}
             axisLine={false}
             tickLine={false}
-            tickFormatter={(v: number) => `${v}°`}
           />
-          <Tooltip content={<CustomTooltip />} cursor={{ stroke: 'var(--chart-axis-line)' }} />
-          <Legend
-            wrapperStyle={{ fontSize: 11, color: 'var(--chart-axis-text)' }}
-            iconType="circle"
-            iconSize={8}
+          
+          <Tooltip 
+            content={<CustomTooltip />} 
+            cursor={{ stroke: 'var(--border)', strokeWidth: 1.5, strokeDasharray: '4 4' }} 
           />
+          
+          {/* Humidity Area */}
           <Area
             yAxisId="humidity"
             type="monotone"
             dataKey="humidity"
-            stroke="var(--color-teal)"
+            stroke="var(--humidity)"
             strokeWidth={2}
             fill="url(#humidityGrad)"
             dot={false}
-            activeDot={{ r: 4, fill: 'var(--color-teal)', stroke: 'var(--color-background)', strokeWidth: 2 }}
+            activeDot={{ r: 4, fill: 'var(--humidity)', stroke: 'var(--bg)', strokeWidth: 2 }}
             name="Humidity"
           />
+          
+          {/* Dew Point Line */}
           <Line
             yAxisId="dewPoint"
             type="monotone"
             dataKey="dewPoint"
-            stroke="var(--color-cyan)"
-            strokeWidth={2}
-            strokeDasharray="6 3"
+            stroke="var(--primary)"
+            strokeWidth={1.5}
+            strokeDasharray="5 3"
             dot={false}
-            activeDot={{ r: 4, fill: 'var(--color-cyan)', stroke: 'var(--color-background)', strokeWidth: 2 }}
+            activeDot={{ r: 4, fill: 'var(--primary)', stroke: 'var(--bg)', strokeWidth: 2 }}
             name="Dew Point"
           />
         </ComposedChart>

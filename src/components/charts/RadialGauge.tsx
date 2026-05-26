@@ -31,9 +31,9 @@ export default function RadialGauge({
   // Center coordinate and radius
   const size = 200;
   const cx = size / 2;
-  const cy = size / 2 + 20; // Lower a bit to account for arc baseline
-  const r = 70;
-  const strokeWidth = 14;
+  const cy = size / 2 + 15; // Lower a bit to account for arc baseline
+  const r = 74;
+  const strokeWidth = 8; // Slender, premium modern strokes
 
   // Arc details (240 degrees total, symmetrical around the top)
   const startAngle = -120;
@@ -47,17 +47,17 @@ export default function RadialGauge({
   // Offset based on progress
   const strokeDashoffset = arcLength - percentage * arcLength;
 
-  // Semantic color selection based on type and value
+  // Semantic color selection based on type and value using theme tokens
   const themeColors = useMemo(() => {
     if (type === 'aqi') {
-      if (value <= 50) return { stroke: 'var(--chart-aqi-good)', text: 'Good', glow: 'rgba(34, 197, 94, 0.25)' };
-      if (value <= 100) return { stroke: 'var(--chart-aqi-moderate)', text: 'Moderate', glow: 'rgba(234, 179, 8, 0.25)' };
-      return { stroke: 'var(--chart-aqi-poor)', text: 'Poor', glow: 'rgba(239, 68, 68, 0.25)' };
+      if (value <= 50) return { stroke: 'var(--aqi-good)', text: 'Good' };
+      if (value <= 100) return { stroke: 'var(--aqi-moderate)', text: 'Moderate' };
+      return { stroke: 'var(--aqi-poor)', text: 'Poor' };
     } else {
       // UV Index
-      if (value <= 2) return { stroke: 'var(--chart-aqi-good)', text: 'Low', glow: 'rgba(34, 197, 94, 0.25)' };
-      if (value <= 5) return { stroke: 'var(--chart-uv-low)', text: 'Moderate', glow: 'rgba(245, 158, 11, 0.25)' };
-      return { stroke: 'var(--chart-uv-high)', text: 'Very High', glow: 'rgba(234, 88, 12, 0.25)' };
+      if (value <= 2) return { stroke: 'var(--uv-low)', text: 'Low' };
+      if (value <= 5) return { stroke: 'var(--uv-mid)', text: 'Moderate' };
+      return { stroke: 'var(--uv-high)', text: 'Very High' };
     }
   }, [type, value]);
 
@@ -67,22 +67,16 @@ export default function RadialGauge({
         width="100%"
         height="100%"
         viewBox={`0 0 ${size} ${size}`}
-        className="max-w-[200px] select-none"
+        className="max-w-[170px] select-none"
       >
-        <defs>
-          <filter id="gaugeGlow" x="-20%" y="-20%" width="140%" height="140%">
-            <feGaussianBlur stdDeviation="6" result="blur" />
-            <feComposite in="SourceGraphic" in2="blur" operator="over" />
-          </filter>
-        </defs>
-
-        {/* Gray Background Track */}
+        {/* Background Track */}
         <circle
           cx={cx}
           cy={cy}
           r={r}
           fill="none"
-          stroke="var(--color-surface-200)"
+          stroke="rgba(255, 255, 255, 0.05)"
+          className="light:stroke-slate-200"
           strokeWidth={strokeWidth}
           strokeDasharray={`${arcLength} ${circumference - arcLength}`}
           strokeLinecap="round"
@@ -100,36 +94,37 @@ export default function RadialGauge({
           strokeDasharray={`${arcLength} ${circumference - arcLength}`}
           initial={{ strokeDashoffset: arcLength }}
           animate={{ strokeDashoffset }}
-          transition={{ duration: 1.2, ease: [0.34, 1.56, 0.64, 1] }}
+          transition={{ duration: 1.5, ease: [0.25, 1, 0.5, 1] }}
           strokeLinecap="round"
           transform={`rotate(${startAngle - 90} ${cx} ${cy})`}
-          style={{ filter: `drop-shadow(0 0 6px ${themeColors.stroke})` }}
         />
 
-        {/* Text Details Inside */}
+        {/* Value Inside */}
         <text
           x={cx}
-          y={cy - 10}
+          y={cy - 5}
           textAnchor="middle"
-          className="text-4xl font-black fill-[var(--text-primary)] font-mono"
+          className="text-4xl font-extrabold fill-white light:fill-slate-900 font-mono tracking-tighter"
         >
           {Math.round(value)}
         </text>
 
+        {/* Label */}
         <text
           x={cx}
-          y={cy + 15}
+          y={cy + 18}
           textAnchor="middle"
-          className="text-[10px] font-bold tracking-widest uppercase fill-[var(--text-secondary)]"
+          className="text-[9px] font-black tracking-widest uppercase fill-white/40 light:fill-slate-400"
         >
           {label}
         </text>
 
+        {/* Status Text */}
         <text
           x={cx}
-          y={cy + 30}
+          y={cy + 32}
           textAnchor="middle"
-          className="text-xs font-semibold"
+          className="text-[10px] font-bold tracking-wide uppercase"
           fill={themeColors.stroke}
         >
           {themeColors.text}
@@ -137,7 +132,7 @@ export default function RadialGauge({
       </svg>
 
       {subtitle && (
-        <span className="text-[10px] font-semibold text-[var(--text-secondary)] uppercase tracking-wider mt-1 block">
+        <span className="text-[10px] font-bold text-white/30 light:text-slate-400 uppercase tracking-widest mt-1 block text-center">
           {subtitle}
         </span>
       )}

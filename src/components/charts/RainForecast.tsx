@@ -7,7 +7,6 @@ import {
   Bar,
   XAxis,
   YAxis,
-  CartesianGrid,
   Tooltip,
   ResponsiveContainer,
   Cell,
@@ -22,30 +21,30 @@ interface RainDataPoint {
   precipitation: number;
 }
 
-function CustomTooltip({ active, payload }: { active?: boolean; payload?: Array<{ value: number; dataKey: string; payload: RainDataPoint }> }) {
+function CustomTooltip({ active, payload }: { active?: boolean; payload?: Array<{ value: number; payload: RainDataPoint }> }) {
   if (!active || !payload?.length) return null;
   const data = payload[0].payload;
+  
   return (
-    <div 
-      className="rounded-xl px-3 py-2 shadow-xl backdrop-blur-xl border"
-      style={{ 
-        backgroundColor: 'var(--chart-tooltip-bg)',
-        borderColor: 'var(--chart-tooltip-border)',
-        color: 'var(--chart-tooltip-text)'
-      }}
-    >
-      <p className="text-sm font-bold" style={{ color: 'var(--chart-rain-mid)' }}>{data.probability}% chance</p>
-      <p className="text-xs opacity-70">{data.precipitation.toFixed(1)} mm</p>
+    <div className="glass-panel px-3.5 py-2.5 shadow-xl bg-slate-950/80 backdrop-blur-xl border border-white/5 text-left flex flex-col gap-0.5">
+      <div className="text-[10px] font-black uppercase tracking-widest text-white/40">
+        Precipitation
+      </div>
+      <div className="text-lg font-black text-cyan mt-0.5">
+        {data.probability}% chance
+      </div>
+      <div className="text-[11px] font-medium text-white/50">
+        Rainfall volume: {data.precipitation.toFixed(1)} mm
+      </div>
     </div>
   );
 }
 
 function getBarColor(probability: number): string {
-  if (probability >= 80) return 'var(--chart-rain-high)';
-  if (probability >= 60) return 'var(--chart-rain-mid)';
-  if (probability >= 40) return 'var(--chart-rain-low)';
-  if (probability >= 20) return 'var(--chart-rain-trace)';
-  return 'var(--chart-rain-none)';
+  if (probability >= 80) return 'var(--primary)';
+  if (probability >= 50) return 'var(--electric)';
+  if (probability >= 20) return 'rgba(59, 130, 246, 0.45)';
+  return 'rgba(255, 255, 255, 0.05)';
 }
 
 export default function RainForecast({ className = '' }: { className?: string }) {
@@ -58,7 +57,7 @@ export default function RainForecast({ className = '' }: { className?: string })
 
     return hourlyForecast.time.slice(currentHour, currentHour + 24).map((t, i) => ({
       time: t,
-      hour: format(parseISO(t), 'ha'),
+      hour: format(parseISO(t), 'h a'),
       probability: hourlyForecast.precipitationProbability[currentHour + i] ?? 0,
       precipitation: hourlyForecast.precipitation[currentHour + i] ?? 0,
     }));
@@ -66,8 +65,10 @@ export default function RainForecast({ className = '' }: { className?: string })
 
   if (!data.length) {
     return (
-      <div className={`flex w-full h-full min-h-[150px] items-center justify-center ${className}`}>
-        <p className="text-sm opacity-50">No rain data available</p>
+      <div className={`flex w-full h-full min-h-[180px] items-center justify-center ${className}`}>
+        <span className="text-xs font-semibold text-white/30 tracking-wider uppercase">
+          No moisture metrics
+        </span>
       </div>
     );
   }
@@ -76,30 +77,34 @@ export default function RainForecast({ className = '' }: { className?: string })
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 0.5, delay: 0.1 }}
-      className={`w-full h-full min-h-[150px] ${className}`}
+      transition={{ duration: 0.6, delay: 0.08 }}
+      className={`w-full h-full min-h-[180px] relative ${className}`}
     >
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={data} margin={{ top: 10, right: 10, bottom: 0, left: -15 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="var(--chart-grid)" vertical={false} />
+        <BarChart data={data} margin={{ top: 12, right: 10, bottom: 0, left: -25 }}>
           <XAxis
             dataKey="hour"
-            tick={{ fill: 'var(--chart-axis-text)', fontSize: 11 }}
-            axisLine={{ stroke: 'var(--chart-axis-line)' }}
+            tick={{ fill: 'var(--text-muted)', fontSize: 10, fontWeight: 700 }}
+            axisLine={false}
             tickLine={false}
             interval={3}
           />
           <YAxis
-            tick={{ fill: 'var(--chart-axis-text)', fontSize: 11 }}
+            tick={{ fill: 'var(--text-muted)', fontSize: 10, fontWeight: 700 }}
             axisLine={false}
             tickLine={false}
             domain={[0, 100]}
             tickFormatter={(v: number) => `${v}%`}
           />
-          <Tooltip content={<CustomTooltip />} cursor={{ fill: 'var(--chart-grid)' }} />
-          <Bar dataKey="probability" radius={[4, 4, 0, 0]} maxBarSize={16}>
+          
+          <Tooltip 
+            content={<CustomTooltip />} 
+            cursor={{ fill: 'rgba(255, 255, 255, 0.02)', radius: 4 }} 
+          />
+          
+          <Bar dataKey="probability" radius={[6, 6, 0, 0]} maxBarSize={10}>
             {data.map((entry, index) => (
-              <Cell key={index} fill={getBarColor(entry.probability)} />
+              <Cell key={`cell-${index}`} fill={getBarColor(entry.probability)} />
             ))}
           </Bar>
         </BarChart>

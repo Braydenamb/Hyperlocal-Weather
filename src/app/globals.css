@@ -1,54 +1,30 @@
 @import "tailwindcss";
 @import "../styles/theme.css";
 
-/* ───────────── HyperWeather Design Tokens ───────────── */
+/* ───────────── HyperWeather Global Design Tokens ───────────── */
 @theme inline {
   /* Typography */
-  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
 
-  /* Core palette – dark */
-  --color-background: #0B1020;
-  --color-foreground: #E8ECF4;
-  --color-panel: rgba(255, 255, 255, 0.06);
-  --color-panel-hover: rgba(255, 255, 255, 0.10);
-  --color-panel-border: rgba(255, 255, 255, 0.08);
-
-  /* Accent ramp */
-  --color-cyan: #06B6D4;
-  --color-cyan-glow: rgba(6, 182, 212, 0.35);
-  --color-electric: #3B82F6;
-  --color-electric-glow: rgba(59, 130, 246, 0.35);
-  --color-violet: #8B5CF6;
-  --color-violet-glow: rgba(139, 92, 246, 0.35);
-  --color-teal: #14B8A6;
-  --color-teal-glow: rgba(20, 184, 166, 0.35);
-
-  /* Semantic */
-  --color-success: #22C55E;
-  --color-warning: #F59E0B;
-  --color-danger: #EF4444;
-  --color-info: #06B6D4;
-
-  /* Surface */
-  --color-surface-50: rgba(255, 255, 255, 0.03);
-  --color-surface-100: rgba(255, 255, 255, 0.06);
-  --color-surface-200: rgba(255, 255, 255, 0.10);
-  --color-surface-300: rgba(255, 255, 255, 0.16);
-
-  /* Shadows */
-  --shadow-glow-cyan: 0 0 20px rgba(6, 182, 212, 0.25);
-  --shadow-glow-electric: 0 0 20px rgba(59, 130, 246, 0.25);
-  --shadow-glow-violet: 0 0 20px rgba(139, 92, 246, 0.25);
+  /* Ambient colors based on theme tokens */
+  --color-bg: var(--bg);
+  --color-panel: var(--panel);
+  --color-panel-hover: var(--panel-hover);
+  --color-panel-active: var(--panel-active);
+  --color-border: var(--border);
+  --color-text: var(--text);
+  
+  --color-cyan: var(--primary);
+  --color-electric: var(--electric);
+  --color-violet: var(--violet);
+  
+  --color-success: var(--aqi-good);
+  --color-warning: var(--aqi-moderate);
+  --color-danger: var(--aqi-poor);
 }
 
-/* ───────────── Base resets ───────────── */
-*,
-*::before,
-*::after {
-  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
-}
-
+/* ───────────── Base Styles & Resets ───────────── */
 html {
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
@@ -56,435 +32,212 @@ html {
 }
 
 body {
-  background: var(--color-background);
-  color: var(--color-foreground);
+  background: var(--bg);
+  color: var(--text);
   font-family: var(--font-sans);
-  transition: background-color 0.3s ease, color 0.3s ease;
+  overflow-x: hidden;
+  transition: background-color 0.4s ease, color 0.4s ease;
 }
 
-/* ───────────── Chart Variables (Dark Default) ───────────── */
-:root {
-  --chart-temp-fill: #06b6d4;
-  --chart-temp-stroke: #06b6d4;
-  --chart-feels-like: rgba(139, 92, 246, 0.5);
-  --chart-rain-high: #2563EB;
-  --chart-rain-mid: #3B82F6;
-  --chart-rain-low: #60A5FA;
-  --chart-rain-trace: #93C5FD;
-  --chart-rain-none: #BFDBFE;
-  --chart-pressure: #a855f7;
-  --chart-wind-line: #14b8a6;
-  --chart-wind-area: #0d9488;
-  --chart-grid: rgba(255, 255, 255, 0.05);
-  --chart-axis-text: rgba(255, 255, 255, 0.4);
-  --chart-axis-line: rgba(255, 255, 255, 0.1);
-  --chart-tooltip-bg: rgba(11, 16, 32, 0.9);
-  --chart-tooltip-border: rgba(255, 255, 255, 0.1);
-  --chart-tooltip-text: #E8ECF4;
+/* ───────────── Premium Scrollbars ───────────── */
+.scroller {
+  --scrollbar-thumb: rgba(255, 255, 255, 0.08);
+  --scrollbar-track: transparent;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+  scrollbar-width: thin;
 }
 
-/* ───────────── Light theme overrides ───────────── */
-.light body,
-.light {
-  --color-background: #F7F9FC;
-  --color-foreground: #1E293B;
-  --color-panel: rgba(255, 255, 255, 0.85);
-  --color-panel-hover: rgba(255, 255, 255, 0.95);
-  --color-panel-border: rgba(0, 0, 0, 0.08);
-  --color-surface-50: rgba(0, 0, 0, 0.02);
-  --color-surface-100: rgba(0, 0, 0, 0.04);
-  --color-surface-200: rgba(0, 0, 0, 0.06);
-  --color-surface-300: rgba(0, 0, 0, 0.10);
-  
-  /* Chart Variables Light Mode Overrides */
-  --chart-temp-fill: #0284c7;
-  --chart-temp-stroke: #0284c7;
-  --chart-feels-like: rgba(124, 58, 237, 0.6);
-  --chart-rain-high: #1E40AF;
-  --chart-rain-mid: #2563EB;
-  --chart-rain-low: #3B82F6;
-  --chart-rain-trace: #60A5FA;
-  --chart-rain-none: #93C5FD;
-  --chart-pressure: #9333ea;
-  --chart-wind-line: #0f766e;
-  --chart-wind-area: #0d9488;
-  --chart-grid: rgba(0, 0, 0, 0.05);
-  --chart-axis-text: rgba(0, 0, 0, 0.5);
-  --chart-axis-line: rgba(0, 0, 0, 0.1);
-  --chart-tooltip-bg: rgba(255, 255, 255, 0.95);
-  --chart-tooltip-border: rgba(0, 0, 0, 0.08);
-  --chart-tooltip-text: #1E293B;
+.light .scroller {
+  --scrollbar-thumb: rgba(15, 23, 42, 0.1);
 }
 
-.light .glass-panel {
-  background: rgba(255, 255, 255, 0.75);
-  border-color: rgba(0, 0, 0, 0.08);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+@supports not (scrollbar-color: auto) {
+  .scroller::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  .scroller::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border-radius: 9999px;
+  }
+  .scroller::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
+  }
 }
 
-.light .glass-sidebar {
-  background: rgba(255, 255, 255, 0.85);
-  border-color: rgba(0, 0, 0, 0.06);
+/* ───────────── Ambient Background System ───────────── */
+.ambient-bg {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  background: var(--bg-gradient);
+  background-size: 400% 400%;
+  animation: slowShift 30s ease infinite;
 }
 
-/* ───────────── Glassmorphism utilities ───────────── */
+@keyframes slowShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ───────────── Glassmorphism & Surface Design ───────────── */
 .glass-panel {
-  background: var(--color-panel);
-  backdrop-filter: blur(24px) saturate(1.2);
-  -webkit-backdrop-filter: blur(24px) saturate(1.2);
-  border: 1px solid var(--color-panel-border);
-  border-radius: 16px;
+  background: var(--panel);
+  backdrop-filter: blur(28px) saturate(1.4);
+  -webkit-backdrop-filter: blur(28px) saturate(1.4);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  box-shadow: var(--shadow-sm);
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.glass-sidebar {
-  background: rgba(11, 16, 32, 0.85);
-  backdrop-filter: blur(30px) saturate(1.4);
-  -webkit-backdrop-filter: blur(30px) saturate(1.4);
-  border-right: 1px solid rgba(255, 255, 255, 0.06);
+.glass-panel-hover:hover {
+  background: var(--panel-hover);
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: var(--shadow-md);
+}
+
+.light .glass-panel-hover:hover {
+  border-color: rgba(15, 23, 42, 0.1);
 }
 
 .glass-header {
-  background: rgba(11, 16, 32, 0.7);
-  backdrop-filter: blur(20px) saturate(1.3);
-  -webkit-backdrop-filter: blur(20px) saturate(1.3);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(4, 7, 17, 0.65);
+  backdrop-filter: blur(24px) saturate(1.2);
+  -webkit-backdrop-filter: blur(24px) saturate(1.2);
+  border-bottom: 1px solid var(--border);
 }
 
 .light .glass-header {
-  background: rgba(255, 255, 255, 0.8);
-  border-color: rgba(0, 0, 0, 0.06);
+  background: rgba(248, 250, 252, 0.75);
 }
 
 .glass-input {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  color: var(--text);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-input:focus-within {
   background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 10px;
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px var(--primary-glow);
+}
+
+.light .glass-input {
+  background: rgba(15, 23, 42, 0.03);
+}
+
+.light .glass-input:focus-within {
+  background: #ffffff;
+}
+
+/* ───────────── Active States & Navigation ───────────── */
+.nav-rail-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  color: var(--text-secondary);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-rail-item:hover {
+  color: var(--text);
+  background: var(--panel-hover);
+}
+
+.nav-rail-active {
+  color: var(--primary) !important;
+  background: var(--panel-active) !important;
+  box-shadow: 0 4px 12px -2px var(--primary-glow);
+}
+
+/* ───────────── Leaflet Overrides ───────────── */
+.leaflet-container {
+  background: var(--bg) !important;
+  font-family: var(--font-sans);
+}
+
+.leaflet-control-zoom a {
+  background: var(--panel) !important;
+  backdrop-filter: blur(10px);
+  color: var(--text) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 8px !important;
+  width: 34px !important;
+  height: 34px !important;
+  line-height: 34px !important;
+  font-size: 14px !important;
   transition: all 0.2s ease;
 }
-.glass-input:focus {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: var(--color-cyan);
-  box-shadow: 0 0 0 3px var(--color-cyan-glow);
-  outline: none;
-}
-.light .glass-input {
-  background: rgba(0, 0, 0, 0.03);
-  border-color: rgba(0, 0, 0, 0.1);
-}
-.light .glass-input:focus {
-  background: white;
+
+.leaflet-control-zoom a:hover {
+  background: var(--panel-hover) !important;
+  color: var(--primary) !important;
 }
 
-/* ───────────── Animated gradient background ───────────── */
-.gradient-bg {
-  background: linear-gradient(
-    135deg,
-    #0B1020 0%,
-    #0f172a 25%,
-    #0c1631 50%,
-    #0e1a3d 75%,
-    #0B1020 100%
-  );
-  background-size: 400% 400%;
-  animation: gradientShift 15s ease infinite;
+.leaflet-control-zoom {
+  border: none !important;
+  box-shadow: var(--shadow-md) !important;
 }
 
-@keyframes gradientShift {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
+.leaflet-popup-content-wrapper {
+  background: var(--panel) !important;
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--border) !important;
+  border-radius: 14px !important;
+  color: var(--text) !important;
+  box-shadow: var(--shadow-lg) !important;
 }
 
-.light .gradient-bg {
-  background: linear-gradient(135deg, #F7F9FC 0%, #EEF2FF 50%, #F7F9FC 100%);
-  background-size: 400% 400%;
-  animation: gradientShift 15s ease infinite;
+.leaflet-popup-tip {
+  background: var(--panel) !important;
+  border: 1px solid var(--border) !important;
 }
 
-/* ───────────── Brand gradient ───────────── */
+/* ───────────── Utility Classes ───────────── */
 .brand-gradient {
-  background: linear-gradient(135deg, #06B6D4, #3B82F6, #8B5CF6);
+  background: linear-gradient(135deg, var(--primary), var(--electric), var(--violet));
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .brand-gradient-bg {
-  background: linear-gradient(135deg, #06B6D4, #3B82F6, #8B5CF6);
+  background: linear-gradient(135deg, var(--primary), var(--electric), var(--violet));
 }
 
-/* ───────────── Glow effects ───────────── */
-.glow-cyan {
-  box-shadow: 0 0 20px var(--color-cyan-glow), 0 0 40px rgba(6, 182, 212, 0.12);
-}
-
-.glow-electric {
-  box-shadow: 0 0 20px var(--color-electric-glow), 0 0 40px rgba(59, 130, 246, 0.12);
-}
-
-.glow-violet {
-  box-shadow: 0 0 20px var(--color-violet-glow), 0 0 40px rgba(139, 92, 246, 0.12);
-}
-
-/* ───────────── Pulsing dot (map marker) ───────────── */
-.pulse-dot {
-  width: 14px;
-  height: 14px;
-  background: #06B6D4;
-  border-radius: 50%;
-  position: relative;
-}
-
-.pulse-dot::before {
-  content: "";
-  position: absolute;
-  inset: -6px;
-  border-radius: 50%;
-  background: rgba(6, 182, 212, 0.3);
-  animation: pulseDot 2s ease-out infinite;
-}
-
-@keyframes pulseDot {
-  0% { transform: scale(0.8); opacity: 1; }
-  100% { transform: scale(2.2); opacity: 0; }
-}
-
-/* ───────────── Skeleton loader ───────────── */
-.skeleton {
-  position: relative;
-  overflow: hidden;
-  background: rgba(255, 255, 255, 0.06);
+.focus-ring:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
   border-radius: 8px;
 }
 
-.skeleton::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.04) 50%,
-    transparent 100%
-  );
-  animation: shimmer 1.5s ease infinite;
+/* ───────────── Micro Animations ───────────── */
+@keyframes pulseDot {
+  0% { transform: scale(0.9); opacity: 0.8; }
+  50% { transform: scale(1.15); opacity: 1; }
+  100% { transform: scale(0.9); opacity: 0.8; }
 }
 
-.light .skeleton {
-  background: rgba(0, 0, 0, 0.06);
-}
-
-.light .skeleton::after {
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.5) 50%,
-    transparent 100%
-  );
-}
-
-@keyframes shimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
-}
-
-/* ───────────── Custom scrollbar ───────────── */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.12);
-  border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.2);
-}
-
-.light ::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.12);
-}
-
-.light ::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.2);
-}
-
-/* ───────────── Leaflet dark theme overrides ───────────── */
-.leaflet-container {
-  background: #0B1020;
-  font-family: var(--font-sans);
-}
-
-.leaflet-control-zoom a {
-  background: rgba(11, 16, 32, 0.85) !important;
-  backdrop-filter: blur(10px);
-  color: #E8ECF4 !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  border-radius: 8px !important;
-  width: 36px !important;
-  height: 36px !important;
-  line-height: 36px !important;
-  font-size: 16px !important;
-  transition: all 0.15s ease;
-}
-
-.leaflet-control-zoom a:hover {
-  background: rgba(6, 182, 212, 0.2) !important;
-  border-color: var(--color-cyan) !important;
-}
-
-.leaflet-control-zoom {
-  border: none !important;
-  border-radius: 10px !important;
-  overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
-}
-
-.leaflet-popup-content-wrapper {
-  background: rgba(11, 16, 32, 0.9) !important;
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  border-radius: 12px !important;
-  color: #E8ECF4 !important;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
-}
-
-.leaflet-popup-tip {
-  background: rgba(11, 16, 32, 0.9) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-}
-
-.leaflet-control-attribution {
-  background: rgba(11, 16, 32, 0.6) !important;
-  color: rgba(255, 255, 255, 0.4) !important;
-  font-size: 10px !important;
-}
-
-.leaflet-control-attribution a {
-  color: rgba(255, 255, 255, 0.5) !important;
-}
-
-.light .leaflet-container {
-  background: #F7F9FC;
-}
-
-.light .leaflet-control-zoom a {
-  background: rgba(255, 255, 255, 0.9) !important;
-  color: #1E293B !important;
-  border-color: rgba(0, 0, 0, 0.1) !important;
-}
-
-.light .leaflet-popup-content-wrapper {
-  background: white !important;
-  border-color: rgba(0, 0, 0, 0.08) !important;
-  color: #1E293B !important;
-}
-
-/* ───────────── Radar animation ───────────── */
-@keyframes radarSweep {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-@keyframes radarPulse {
-  0% { transform: scale(0.3); opacity: 0.6; }
-  100% { transform: scale(1); opacity: 0; }
-}
-
-.radar-sweep {
-  animation: radarSweep 4s linear infinite;
-}
-
-.radar-ring {
-  animation: radarPulse 3s ease-out infinite;
-}
-
-.radar-ring:nth-child(2) {
-  animation-delay: 1s;
-}
-.radar-ring:nth-child(3) {
-  animation-delay: 2s;
-}
-
-/* ───────────── Alert severity colors ───────────── */
-.alert-warning {
-  border-left: 4px solid var(--color-warning);
-  background: rgba(245, 158, 11, 0.08);
-}
-
-.alert-danger {
-  border-left: 4px solid var(--color-danger);
-  background: rgba(239, 68, 68, 0.08);
-}
-
-.alert-info {
-  border-left: 4px solid var(--color-info);
-  background: rgba(6, 182, 212, 0.08);
-}
-
-/* ───────────── Smooth transitions ───────────── */
-.transition-gpu {
-  will-change: transform;
-  transform: translateZ(0);
-}
-
-/* ───────────── Active nav glow ───────────── */
-.nav-active {
-  background: rgba(6, 182, 212, 0.12);
-  color: #06B6D4;
-  box-shadow: inset 3px 0 0 #06B6D4;
-}
-
-.nav-active-mobile {
-  color: #06B6D4;
-  position: relative;
-}
-
-.nav-active-mobile::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 20px;
-  height: 3px;
-  background: #06B6D4;
-  border-radius: 3px;
-}
-
-/* ───────────── Chart tooltip ───────────── */
-.recharts-tooltip-wrapper .recharts-default-tooltip {
-  background: rgba(11, 16, 32, 0.9) !important;
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  border-radius: 10px !important;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
-}
-
-.light .recharts-tooltip-wrapper .recharts-default-tooltip {
-  background: rgba(255, 255, 255, 0.95) !important;
-  border-color: rgba(0, 0, 0, 0.08) !important;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08) !important;
-}
-
-/* ───────────── Weather condition icons animation ───────────── */
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-4px); }
+.pulse-active {
+  animation: pulseDot 2s ease-in-out infinite;
 }
 
 .weather-icon-float {
-  animation: float 3s ease-in-out infinite;
+  animation: iconFloat 4s ease-in-out infinite;
 }
 
-/* ───────────── Focus ring ───────────── */
-.focus-ring:focus-visible {
-  outline: 2px solid var(--color-cyan);
-  outline-offset: 2px;
-  border-radius: 8px;
+@keyframes iconFloat {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-5px) rotate(2deg); }
 }
