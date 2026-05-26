@@ -7,6 +7,7 @@ import HeroWeather from '@/components/weather/HeroWeather';
 import KPIGrid from '@/components/weather/KPIGrid';
 import HourlyTemperature from '@/components/charts/HourlyTemperature';
 import RainForecast from '@/components/charts/RainForecast';
+import RadialGauge from '@/components/charts/RadialGauge';
 import WeatherIcon from '@/components/weather/WeatherIcon';
 import { CalendarDays, CloudRain, Sun, Compass, RefreshCw } from 'lucide-react';
 import clsx from 'clsx';
@@ -31,12 +32,11 @@ const getWeatherDesc = (code: number) => {
 };
 
 export default function OverviewPage() {
-  const { currentWeather, dailyForecast, isLoading, error } = useWeather();
+  const { currentWeather, dailyForecast, airQuality, isLoading, error } = useWeather();
   const currentLocation = useLocationStore((s) => s.currentLocation);
 
   const handleRefresh = () => {
     if (currentLocation) {
-      // Re-trigger by resetting current location coordinates
       useLocationStore.getState().setCurrentLocation({ ...currentLocation });
     }
   };
@@ -45,13 +45,21 @@ export default function OverviewPage() {
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
-      transition: { staggerChildren: 0.1 },
+      transition: { staggerChildren: 0.08 },
     },
   };
 
   const itemVariants = {
     hidden: { opacity: 0, y: 15 },
-    show: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 300, damping: 24 } },
+    show: { 
+      opacity: 1, 
+      y: 0, 
+      transition: { 
+        type: 'spring', 
+        stiffness: 180, 
+        damping: 20 
+      } 
+    },
   } as any;
 
   if (!currentLocation) {
@@ -60,6 +68,7 @@ export default function OverviewPage() {
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
+          transition={{ type: 'spring', stiffness: 180, damping: 20 }}
           className="max-w-md glass-panel p-8 rounded-3xl border border-white/10 shadow-2xl bg-[#0B1020]/60 backdrop-blur-xl"
         >
           <div className="w-16 h-16 rounded-full bg-cyan/10 border border-cyan/30 text-cyan flex items-center justify-center mx-auto mb-5 shadow-[0_0_24px_rgba(6,182,212,0.15)]">
@@ -124,34 +133,76 @@ export default function OverviewPage() {
           </motion.div>
 
           {/* Charts & Analytics Overview */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <motion.div variants={itemVariants} className="glass-panel p-5 rounded-3xl border border-white/10 bg-[#0B1020]/45 backdrop-blur-xl flex flex-col">
-              <div className="flex items-center justify-between mb-4 px-1">
-                <h3 className="text-sm font-bold text-white tracking-wider uppercase flex items-center gap-2">
-                  <Sun className="w-4 h-4 text-cyan" />
-                  Temperature Curve
-                </h3>
-                <span className="text-[10px] font-semibold text-white/40 uppercase tracking-widest">
-                  Next 24h
-                </span>
-              </div>
-              <div className="flex-1 w-full min-h-[250px]">
-                <HourlyTemperature />
-              </div>
-            </motion.div>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2 flex flex-col gap-6">
+              <motion.div variants={itemVariants} className="glass-panel p-5 rounded-3xl border border-white/10 bg-[#0B1020]/45 backdrop-blur-xl flex flex-col">
+                <div className="flex items-center justify-between mb-4 px-1">
+                  <h3 className="text-sm font-bold text-white tracking-wider uppercase flex items-center gap-2">
+                    <Sun className="w-4 h-4 text-cyan" />
+                    Temperature Curve
+                  </h3>
+                  <span className="text-[10px] font-semibold text-white/40 uppercase tracking-widest">
+                    Next 24h
+                  </span>
+                </div>
+                <div className="flex-1 w-full min-h-[250px]">
+                  <HourlyTemperature />
+                </div>
+              </motion.div>
 
-            <motion.div variants={itemVariants} className="glass-panel p-5 rounded-3xl border border-white/10 bg-[#0B1020]/45 backdrop-blur-xl flex flex-col">
-              <div className="flex items-center justify-between mb-4 px-1">
-                <h3 className="text-sm font-bold text-white tracking-wider uppercase flex items-center gap-2">
-                  <CloudRain className="w-4 h-4 text-blue-400" />
-                  Rain Timeline
+              <motion.div variants={itemVariants} className="glass-panel p-5 rounded-3xl border border-white/10 bg-[#0B1020]/45 backdrop-blur-xl flex flex-col">
+                <div className="flex items-center justify-between mb-4 px-1">
+                  <h3 className="text-sm font-bold text-white tracking-wider uppercase flex items-center gap-2">
+                    <CloudRain className="w-4 h-4 text-blue-400" />
+                    Rain Timeline
+                  </h3>
+                  <span className="text-[10px] font-semibold text-white/40 uppercase tracking-widest">
+                    Precipitation Prob.
+                  </span>
+                </div>
+                <div className="flex-1 w-full min-h-[250px]">
+                  <RainForecast />
+                </div>
+              </motion.div>
+            </div>
+
+            {/* Meteorological Indices Panel */}
+            <motion.div
+              variants={itemVariants}
+              className="glass-panel p-6 rounded-3xl border border-white/10 bg-[#0B1020]/45 backdrop-blur-xl flex flex-col justify-between"
+            >
+              <div>
+                <h3 className="text-sm font-bold text-white tracking-wider uppercase mb-3 px-1">
+                  Atmospheric Indicators
                 </h3>
-                <span className="text-[10px] font-semibold text-white/40 uppercase tracking-widest">
-                  Precipitation Prob.
-                </span>
+                <p className="text-xs text-white/40 mb-6 leading-relaxed">
+                  Real-time index estimations for local particulate concentration and active solar radiation.
+                </p>
               </div>
-              <div className="flex-1 w-full min-h-[250px]">
-                <RainForecast />
+
+              <div className="flex flex-col sm:flex-row lg:flex-col gap-8 justify-around items-center py-4">
+                <RadialGauge
+                  value={airQuality ? airQuality.usAqi : 42}
+                  min={0}
+                  max={300}
+                  label="AQI"
+                  subtitle="Air Quality Index"
+                  type="aqi"
+                  className="w-full max-w-[160px]"
+                />
+
+                <div className="h-px w-full bg-white/5 lg:block hidden"></div>
+                <div className="w-px h-16 bg-white/5 lg:hidden hidden sm:block"></div>
+
+                <RadialGauge
+                  value={dailyForecast ? (dailyForecast.uvIndexMax[0] ?? 4.5) : 4.5}
+                  min={0}
+                  max={12}
+                  label="UV Index"
+                  subtitle="Max UV Radiation"
+                  type="uv"
+                  className="w-full max-w-[160px]"
+                />
               </div>
             </motion.div>
           </div>

@@ -1,0 +1,60 @@
+/* ───────────── HyperWeather Semantic CSS Variables ───────────── */
+:root {
+  --background: #0B1020;
+  --foreground: #E8ECF4;
+  --card: rgba(255, 255, 255, 0.06);
+  --card-hover: rgba(255, 255, 255, 0.10);
+  --border: rgba(255, 255, 255, 0.08);
+  --text-primary: #E8ECF4;
+  --text-secondary: rgba(255, 255, 255, 0.5);
+  --text-muted: rgba(255, 255, 255, 0.3);
+  
+  --accent: #06B6D4;
+  --accent-glow: rgba(6, 182, 212, 0.35);
+  --accent-electric: #3B82F6;
+  --accent-violet: #8B5CF6;
+  
+  /* Semantic weather colors */
+  --chart-rain: #3b82f6;
+  --chart-storms: #8b5cf6;
+  --chart-humidity: #14b8a6;
+  
+  /* AQI Scales */
+  --chart-aqi-good: #22c55e;
+  --chart-aqi-moderate: #eab308;
+  --chart-aqi-poor: #ef4444;
+  
+  /* UV Scales */
+  --chart-uv-low: #f59e0b;
+  --chart-uv-high: #ea580c;
+}
+
+.light {
+  --background: #F7F9FC;
+  --foreground: #1E293B;
+  --card: rgba(255, 255, 255, 0.85);
+  --card-hover: rgba(255, 255, 255, 0.95);
+  --border: rgba(0, 0, 0, 0.08);
+  --text-primary: #1E293B;
+  --text-secondary: rgba(0, 0, 0, 0.55);
+  --text-muted: rgba(0, 0, 0, 0.35);
+  
+  --accent: #0284C7;
+  --accent-glow: rgba(2, 132, 199, 0.2);
+  --accent-electric: #2563EB;
+  --accent-violet: #7C3AED;
+  
+  /* Semantic weather colors */
+  --chart-rain: #2563EB;
+  --chart-storms: #7C3AED;
+  --chart-humidity: #0D9488;
+  
+  /* AQI Scales */
+  --chart-aqi-good: #16A34A;
+  --chart-aqi-moderate: #CA8A04;
+  --chart-aqi-poor: #DC2626;
+  
+  /* UV Scales */
+  --chart-uv-low: #D97706;
+  --chart-uv-high: #C2410C;
+}

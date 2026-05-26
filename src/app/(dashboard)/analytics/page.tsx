@@ -5,11 +5,32 @@ import { useWeather } from '@/hooks/useWeather';
 import { useLocationStore } from '@/stores/locationStore';
 import { BarChart3, TrendingUp, Info, Sun, Zap, Award, CheckCircle } from 'lucide-react';
 import HourlyTemperature from '@/components/charts/HourlyTemperature';
-import PressureTrends from '@/components/charts/PressureTrends';
+import WeatherHeatmap from '@/components/charts/WeatherHeatmap';
 
 export default function AnalyticsPage() {
   const { currentWeather, dailyForecast, isLoading } = useWeather();
   const currentLocation = useLocationStore((s) => s.currentLocation);
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: { staggerChildren: 0.08 },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 15 },
+    show: { 
+      opacity: 1, 
+      y: 0, 
+      transition: { 
+        type: 'spring', 
+        stiffness: 180, 
+        damping: 20 
+      } 
+    },
+  } as any;
 
   if (!currentLocation) {
     return (
@@ -28,7 +49,12 @@ export default function AnalyticsPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <motion.div
+      variants={containerVariants}
+      initial="hidden"
+      animate="show"
+      className="space-y-6"
+    >
       {/* Title */}
       <div>
         <h1 className="text-2xl font-bold text-white tracking-wide flex items-center gap-2">
@@ -51,9 +77,8 @@ export default function AnalyticsPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {/* Stat 1 */}
             <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="glass-panel p-5 rounded-3xl border border-white/8 bg-[#0B1020]/45 backdrop-blur-xl flex items-center gap-4"
+              variants={itemVariants}
+              className="glass-panel p-5 rounded-3xl border border-white/8 bg-[#0B1020]/45 backdrop-blur-xl flex items-center gap-4 hover:shadow-lg transition-all duration-300"
             >
               <div className="w-12 h-12 rounded-2xl bg-cyan/15 border border-cyan/30 text-cyan flex items-center justify-center flex-shrink-0 shadow-[0_0_16px_rgba(6,182,212,0.15)]">
                 <TrendingUp className="w-5 h-5" />
@@ -73,10 +98,8 @@ export default function AnalyticsPage() {
 
             {/* Stat 2 */}
             <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.05 }}
-              className="glass-panel p-5 rounded-3xl border border-white/8 bg-[#0B1020]/45 backdrop-blur-xl flex items-center gap-4"
+              variants={itemVariants}
+              className="glass-panel p-5 rounded-3xl border border-white/8 bg-[#0B1020]/45 backdrop-blur-xl flex items-center gap-4 hover:shadow-lg transition-all duration-300"
             >
               <div className="w-12 h-12 rounded-2xl bg-violet-500/15 border border-violet-500/30 text-violet-400 flex items-center justify-center flex-shrink-0">
                 <Zap className="w-5 h-5" />
@@ -96,10 +119,8 @@ export default function AnalyticsPage() {
 
             {/* Stat 3 */}
             <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="glass-panel p-5 rounded-3xl border border-white/8 bg-[#0B1020]/45 backdrop-blur-xl flex items-center gap-4"
+              variants={itemVariants}
+              className="glass-panel p-5 rounded-3xl border border-white/8 bg-[#0B1020]/45 backdrop-blur-xl flex items-center gap-4 hover:shadow-lg transition-all duration-300"
             >
               <div className="w-12 h-12 rounded-2xl bg-amber-500/15 border border-amber-500/30 text-amber-400 flex items-center justify-center flex-shrink-0">
                 <Sun className="w-5 h-5" />
@@ -120,7 +141,7 @@ export default function AnalyticsPage() {
 
           {/* Core Analytics charts */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="glass-panel p-5 rounded-3xl border border-white/10 bg-[#0B1020]/45 backdrop-blur-xl flex flex-col">
+            <motion.div variants={itemVariants} className="glass-panel p-5 rounded-3xl border border-white/10 bg-[#0B1020]/45 backdrop-blur-xl flex flex-col">
               <h3 className="text-sm font-bold text-white tracking-wider uppercase mb-4 px-1 flex items-center gap-2">
                 <Award className="w-4 h-4 text-cyan" />
                 Diurnal Temperature Profile
@@ -128,21 +149,21 @@ export default function AnalyticsPage() {
               <div className="flex-1 w-full min-h-[250px]">
                 <HourlyTemperature />
               </div>
-            </div>
+            </motion.div>
 
-            <div className="glass-panel p-5 rounded-3xl border border-white/10 bg-[#0B1020]/45 backdrop-blur-xl flex flex-col">
+            <motion.div variants={itemVariants} className="glass-panel p-5 rounded-3xl border border-white/10 bg-[#0B1020]/45 backdrop-blur-xl flex flex-col justify-between">
               <h3 className="text-sm font-bold text-white tracking-wider uppercase mb-4 px-1 flex items-center gap-2">
                 <CheckCircle className="w-4 h-4 text-violet-400" />
-                Hyperlocal Microclimate Interpolation
+                Hyperlocal Microclimate Heatmap
               </h3>
-              <div className="flex-1 w-full min-h-[250px]">
-                <PressureTrends />
+              <div className="flex-1 w-full flex items-center justify-center py-2">
+                <WeatherHeatmap />
               </div>
-            </div>
+            </motion.div>
           </div>
 
           {/* Microclimate Interpolation description */}
-          <div className="glass-panel p-6 rounded-3xl border border-white/8 bg-[#0B1020]/45 backdrop-blur-xl flex flex-col md:flex-row items-center gap-4 justify-between">
+          <motion.div variants={itemVariants} className="glass-panel p-6 rounded-3xl border border-white/8 bg-[#0B1020]/45 backdrop-blur-xl flex flex-col md:flex-row items-center gap-4 justify-between">
             <div className="flex gap-4 items-start">
               <div className="p-3 bg-cyan/10 rounded-2xl text-cyan flex-shrink-0 mt-0.5">
                 <Info className="w-6 h-6" />
@@ -154,9 +175,9 @@ export default function AnalyticsPage() {
                 </p>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       )}
-    </div>
+    </motion.div>
   );
 }
