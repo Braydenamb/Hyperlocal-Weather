@@ -125,7 +125,7 @@ export default function OverviewPage() {
 
           {/* Charts & Analytics Overview */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <motion.div variants={itemVariants} className="glass-panel p-5 rounded-3xl border border-white/10 bg-[#0B1020]/45 backdrop-blur-xl">
+            <motion.div variants={itemVariants} className="glass-panel p-5 rounded-3xl border border-white/10 bg-[#0B1020]/45 backdrop-blur-xl flex flex-col">
               <div className="flex items-center justify-between mb-4 px-1">
                 <h3 className="text-sm font-bold text-white tracking-wider uppercase flex items-center gap-2">
                   <Sun className="w-4 h-4 text-cyan" />
@@ -135,12 +135,12 @@ export default function OverviewPage() {
                   Next 24h
                 </span>
               </div>
-              <div className="h-[220px]">
+              <div className="flex-1 w-full min-h-[250px]">
                 <HourlyTemperature />
               </div>
             </motion.div>
 
-            <motion.div variants={itemVariants} className="glass-panel p-5 rounded-3xl border border-white/10 bg-[#0B1020]/45 backdrop-blur-xl">
+            <motion.div variants={itemVariants} className="glass-panel p-5 rounded-3xl border border-white/10 bg-[#0B1020]/45 backdrop-blur-xl flex flex-col">
               <div className="flex items-center justify-between mb-4 px-1">
                 <h3 className="text-sm font-bold text-white tracking-wider uppercase flex items-center gap-2">
                   <CloudRain className="w-4 h-4 text-blue-400" />
@@ -150,7 +150,7 @@ export default function OverviewPage() {
                   Precipitation Prob.
                 </span>
               </div>
-              <div className="h-[220px]">
+              <div className="flex-1 w-full min-h-[250px]">
                 <RainForecast />
               </div>
             </motion.div>

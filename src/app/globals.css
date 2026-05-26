@@ -61,6 +61,27 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+/* ───────────── Chart Variables (Dark Default) ───────────── */
+:root {
+  --chart-temp-fill: #06b6d4;
+  --chart-temp-stroke: #06b6d4;
+  --chart-feels-like: rgba(139, 92, 246, 0.5);
+  --chart-rain-high: #2563EB;
+  --chart-rain-mid: #3B82F6;
+  --chart-rain-low: #60A5FA;
+  --chart-rain-trace: #93C5FD;
+  --chart-rain-none: #BFDBFE;
+  --chart-pressure: #a855f7;
+  --chart-wind-line: #14b8a6;
+  --chart-wind-area: #0d9488;
+  --chart-grid: rgba(255, 255, 255, 0.05);
+  --chart-axis-text: rgba(255, 255, 255, 0.4);
+  --chart-axis-line: rgba(255, 255, 255, 0.1);
+  --chart-tooltip-bg: rgba(11, 16, 32, 0.9);
+  --chart-tooltip-border: rgba(255, 255, 255, 0.1);
+  --chart-tooltip-text: #E8ECF4;
+}
+
 /* ───────────── Light theme overrides ───────────── */
 .light body,
 .light {
@@ -73,6 +94,25 @@ body {
   --color-surface-100: rgba(0, 0, 0, 0.04);
   --color-surface-200: rgba(0, 0, 0, 0.06);
   --color-surface-300: rgba(0, 0, 0, 0.10);
+  
+  /* Chart Variables Light Mode Overrides */
+  --chart-temp-fill: #0284c7;
+  --chart-temp-stroke: #0284c7;
+  --chart-feels-like: rgba(124, 58, 237, 0.6);
+  --chart-rain-high: #1E40AF;
+  --chart-rain-mid: #2563EB;
+  --chart-rain-low: #3B82F6;
+  --chart-rain-trace: #60A5FA;
+  --chart-rain-none: #93C5FD;
+  --chart-pressure: #9333ea;
+  --chart-wind-line: #0f766e;
+  --chart-wind-area: #0d9488;
+  --chart-grid: rgba(0, 0, 0, 0.05);
+  --chart-axis-text: rgba(0, 0, 0, 0.5);
+  --chart-axis-line: rgba(0, 0, 0, 0.1);
+  --chart-tooltip-bg: rgba(255, 255, 255, 0.95);
+  --chart-tooltip-border: rgba(0, 0, 0, 0.08);
+  --chart-tooltip-text: #1E293B;
 }
 
 .light .glass-panel {

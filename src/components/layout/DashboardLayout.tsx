@@ -52,9 +52,9 @@ export default function DashboardLayout({
         <Header onMobileMenuToggle={() => setMobileMenuOpen(!mobileMenuOpen)} />
 
         {/* Content + Right Panel */}
-        <div className="flex-1 flex overflow-hidden">
+        <div className="flex-1 flex overflow-hidden min-h-0">
           {/* Main scrollable content */}
-          <main className="flex-1 overflow-y-auto p-4 lg:p-6 pb-20 md:pb-6">
+          <main className="flex-1 overflow-y-auto p-4 lg:p-6 pb-28 md:pb-8">
             {children}
           </main>
 

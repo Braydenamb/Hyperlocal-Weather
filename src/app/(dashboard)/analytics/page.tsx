@@ -120,22 +120,22 @@ export default function AnalyticsPage() {
 
           {/* Core Analytics charts */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="glass-panel p-5 rounded-3xl border border-white/10 bg-[#0B1020]/45 backdrop-blur-xl">
+            <div className="glass-panel p-5 rounded-3xl border border-white/10 bg-[#0B1020]/45 backdrop-blur-xl flex flex-col">
               <h3 className="text-sm font-bold text-white tracking-wider uppercase mb-4 px-1 flex items-center gap-2">
                 <Award className="w-4 h-4 text-cyan" />
                 Diurnal Temperature Profile
               </h3>
-              <div className="h-[210px]">
+              <div className="flex-1 w-full min-h-[250px]">
                 <HourlyTemperature />
               </div>
             </div>
 
-            <div className="glass-panel p-5 rounded-3xl border border-white/10 bg-[#0B1020]/45 backdrop-blur-xl">
+            <div className="glass-panel p-5 rounded-3xl border border-white/10 bg-[#0B1020]/45 backdrop-blur-xl flex flex-col">
               <h3 className="text-sm font-bold text-white tracking-wider uppercase mb-4 px-1 flex items-center gap-2">
                 <CheckCircle className="w-4 h-4 text-violet-400" />
                 Hyperlocal Microclimate Interpolation
               </h3>
-              <div className="h-[210px]">
+              <div className="flex-1 w-full min-h-[250px]">
                 <PressureTrends />
               </div>
             </div>
