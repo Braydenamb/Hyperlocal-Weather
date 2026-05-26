@@ -250,7 +250,7 @@ export default function HeroWeather() {
             <SunriseSunset
               sunrise={dailyForecast.sunrise[0]}
               sunset={dailyForecast.sunset[0]}
-              className="border-white/5 bg-white/5"
+              variant="minimal"
             />
           </div>
         )}

@@ -9,9 +9,15 @@ interface SunriseSunsetProps {
   sunrise: string;
   sunset: string;
   className?: string;
+  variant?: 'glass' | 'minimal';
 }
 
-export default function SunriseSunset({ sunrise, sunset, className = '' }: SunriseSunsetProps) {
+export default function SunriseSunset({
+  sunrise,
+  sunset,
+  className = '',
+  variant = 'glass',
+}: SunriseSunsetProps) {
   const { sunriseTime, sunsetTime, progress, sunX, sunY } = useMemo(() => {
     const sr = parseISO(sunrise);
     const ss = parseISO(sunset);
@@ -77,16 +83,20 @@ export default function SunriseSunset({ sunrise, sunset, className = '' }: Sunri
 
   const isDayTime = progress > 0 && progress < 1;
 
+  const isMinimal = variant === 'minimal';
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className={`rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-xl ${className}`}
+      className={isMinimal ? className : `rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-xl ${className}`}
     >
-      <p className="mb-2 text-xs font-medium tracking-wider text-white/50 uppercase">
-        Sunrise & Sunset
-      </p>
+      {!isMinimal && (
+        <p className="mb-2 text-xs font-medium tracking-wider text-white/50 uppercase">
+          Sunrise & Sunset
+        </p>
+      )}
 
       <svg viewBox="0 0 300 130" className="w-full" aria-label="Sun position arc">
         <defs>

@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { motion } from 'framer-motion';
 import Sidebar from './Sidebar';
 import Header from './Header';
 import RightPanel from './RightPanel';
@@ -42,11 +41,11 @@ export default function DashboardLayout({
       )}
 
       {/* Main content area */}
-      <motion.div
-        className="flex-1 flex flex-col min-w-0 h-screen"
-        animate={{ marginLeft: typeof window !== 'undefined' && window.innerWidth >= 768 ? sidebarWidth : 0 }}
-        transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-        style={{ marginLeft: 0 }}
+      <div
+        className="flex-1 flex flex-col min-w-0 h-screen transition-[padding-left] duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] pl-0 md:pl-[var(--sidebar-width)]"
+        style={{
+          ['--sidebar-width' as any]: sidebarCollapsed ? '64px' : '240px',
+        }}
       >
         {/* Header */}
         <Header onMobileMenuToggle={() => setMobileMenuOpen(!mobileMenuOpen)} />
@@ -61,7 +60,7 @@ export default function DashboardLayout({
           {/* Right Panel */}
           <RightPanel />
         </div>
-      </motion.div>
+      </div>
 
       {/* Mobile Bottom Nav */}
       <MobileNav />

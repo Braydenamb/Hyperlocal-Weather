@@ -49,6 +49,28 @@ function RecenterMap({ lat, lon }: { lat: number; lon: number }) {
   return null;
 }
 
+// Component to automatically call map.invalidateSize() when the map container element resizes
+function MapResizer() {
+  const map = useMap();
+  useEffect(() => {
+    const container = map.getContainer();
+    if (!container) return;
+
+    const observer = new ResizeObserver(() => {
+      requestAnimationFrame(() => {
+        map.invalidateSize({ animate: true });
+      });
+    });
+
+    observer.observe(container);
+    return () => {
+      observer.disconnect();
+    };
+  }, [map]);
+
+  return null;
+}
+
 interface WeatherMapProps {
   showRadar?: boolean;
 }
@@ -98,8 +120,9 @@ export default function WeatherMap({ showRadar = false }: WeatherMapProps) {
       >
         <TileLayer url={tileUrl} attribution={attribution} />
         
-        {/* Recenter behavior */}
+        {/* Recenter & Reflow behavior */}
         <RecenterMap lat={lat} lon={lon} />
+        <MapResizer />
 
         {/* GPS location marker */}
         <Marker position={[lat, lon]} icon={customIcon}>

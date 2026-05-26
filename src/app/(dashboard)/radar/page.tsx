@@ -32,7 +32,7 @@ export default function RadarPage() {
   };
 
   return (
-    <div className="w-full h-[calc(100vh-140px)] min-h-[450px] relative flex flex-col">
+    <div className="w-full h-[380px] md:h-[calc(100vh-180px)] min-h-[380px] md:min-h-[450px] relative flex flex-col">
       {/* Page Title block */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
         <div>
