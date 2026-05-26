@@ -1,0 +1,74 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model WeatherCache {
+  id        String   @id @default(cuid())
+  lat       Float
+  lon       Float
+  data      Json
+  fetchedAt DateTime @default(now())
+  expiresAt DateTime
+
+  @@index([lat, lon])
+  @@index([expiresAt])
+}
+
+model CommunityReport {
+  id          String   @id @default(cuid())
+  lat         Float
+  lon         Float
+  condition   String
+  intensity   Int      @default(1)
+  description String?
+  createdAt   DateTime @default(now())
+
+  @@index([lat, lon])
+  @@index([createdAt])
+}
+
+model SavedLocation {
+  id        String   @id @default(cuid())
+  name      String
+  lat       Float
+  lon       Float
+  isDefault Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model RadarCell {
+  id        String   @id @default(cuid())
+  lat       Float
+  lon       Float
+  intensity Float
+  type      String
+  timestamp DateTime @default(now())
+
+  @@index([timestamp])
+}
+
+model ForecastSnapshot {
+  id        String   @id @default(cuid())
+  lat       Float
+  lon       Float
+  data      Json
+  model     String
+  createdAt DateTime @default(now())
+
+  @@index([lat, lon, createdAt])
+}
+
+model UserSettings {
+  id            String  @id @default(cuid())
+  theme         String  @default("dark")
+  units         String  @default("metric")
+  radarOpacity  Float   @default(0.7)
+  notifications Boolean @default(true)
+  defaultLat    Float?
+  defaultLon    Float?
+}
